@@ -83,11 +83,17 @@ rule format_metadata:
     """
     Inputs
     ------
-    RAW_METADATA
+    RAW_METADATA:
+        Path to raw metadata file containing sample info
 
     Outputs
     -------
-    FILTERED_METADATA
+    FILTERED_METADATA_RDATA
+        File with the raw metadata filtered in RData format.
+    
+    Parameters
+        output_dir:
+            Directory for output.
 
     """
     input:
@@ -109,17 +115,26 @@ rule format_metadata:
 
 rule perform_dimensionality_reduction:
     """
-    This rule takes original input and reduces dimensionality of the indegree data and plots this.
+    This rule takes original input and reduces dimensionality of the expression data and plots this.
 
     Inputs
     ------
-    INPUT_METADATA:
-        Path to the metadata file containing sample information.
-   
+    FILTERED_METADATA_RDATA:
+        Path to the filtered metadata file from the previous rule.
+    FILTERED_EXPRESSION:
+        Path to an expression file that you provide as a stand-alone input.
+
     Outputs
     -------
     PCA_PLOT_PDF:
-        PCA for specified variable in pdf
+        PCA for specified variable in pdf.
+
+    Parameters
+    -------
+    VARIABLE_TO_VISUALIZE:
+        Variable to visualize in the PCA.
+    output_dir:
+        Directory for output.
 
     """
     input:
@@ -128,7 +143,7 @@ rule perform_dimensionality_reduction:
     output:
         PCA_PLOT_PDF
     message:
-        "; Running dimensionality reduction of indegrees on {input} ;"
+        "; Running dimensionality reduction of expressions on {input} ;"
     params:
         bin = os.path.join(config["bin"]), \
       #  output_dir = os.path.join(BASE_OUTPUT_DIR), \ 
