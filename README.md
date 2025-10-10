@@ -1,2 +1,8 @@
 # sq_seminar_smk_example
-An example of snakemake rules using Rscripts
+Today we will show you an example of snakemake rules using Rscripts. 
+
+The snakemake workflow will look like this yay. 
+
+![workflow](https://github.com/ibonthuis/sq_seminar_smk_example/blob/dev-branch/dag_snakemake.png)
+
+
