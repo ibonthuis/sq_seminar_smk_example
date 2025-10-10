@@ -1,0 +1,18 @@
+# Bin
+bin: "bin"
+
+# Input
+
+#data_dir: "data/dataset1" # Note to self: change when explaining wild cards
+data_dir: "data"
+metadata_name: "metadata.csv"
+expression_name: "filtered_expression.tsv"
+visualisation_var: "sample_type"
+
+
+# Wildcards
+dataset: ["dataset1", "dataset2"]
+
+
+## Results directory:
+output_dir: "snakemake_results_with_wildcards"
