@@ -1,5 +1,9 @@
 ## Start of snakefile
 ## snakemake --cores 1 -np ### For dry run
+# For making a dag.pdf
+# Install graphviz in a conda environment. Activate the conda environment. Run the following code:
+# snakemake --dag | dot -Tpdf > dag.pdf
+
 
 ## Libraries
 import os 
