@@ -1,6 +1,6 @@
 ### Loading libraries
 required_libraries <- c(
-    "data.table",    
+    "data.table",
     "dplyr",
     "optparse",
     "rlang")
@@ -21,10 +21,10 @@ option_list <- list(
         help = "Path to the metadata file.",
         metavar = "character"),
     optparse::make_option(
-        c("-o", "--output_dir"),
+        c("-o", "--output_file"),
         type = "character",
         default = NULL,
-        help = "Path to the output directory.",
+        help = "Path to the clean metadata file",
         metavar = "character")
 )
 
@@ -33,15 +33,17 @@ opt <- optparse::parse_args(opt_parser)
 
 ## Initialize variable
 METADATA_FILE <- opt$metadata
-OUTPUT_DIR <- opt$output_dir
+OUTPUT_FILE <- opt$output_file
 
 ## Code
 metadata_df <- fread(METADATA_FILE)
 
 metadata_df <- metadata_df %>%
-  select(patient, sample_name, sample_type, tissue_type, tumor_site, pam50_subtype)
+  select(
+    patient, sample_name, sample_type, tissue_type, tumor_site, pam50_subtype
+  )
 
-
-save(metadata_df,
-    file = file.path(OUTPUT_DIR, "filtered_metadata.RData")
+save(
+  metadata_df,
+  file = OUTPUT_FILE
 )

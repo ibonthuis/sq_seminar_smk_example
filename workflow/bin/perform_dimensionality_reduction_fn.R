@@ -90,6 +90,8 @@ merge_pca_met <- function(pca, metadata_df) {
 #' plot <- plot_12_discrete(pca_results, metadata, "sample_type", 5)
 #' print(plot)
 plot_12_discrete <- function(pca, metadata_df, to_visualize) { # To do: incorporate, first_pc, second_pc with rlang package ...., then I don't need plot_12 separate from plot_13
+    standard_colors <- RColorBrewer::brewer.pal(8, "Set1")
+    
     merged <- merge_pca_met(pca, metadata_df)
     summ <- summary(pca)
     summ <- as.data.frame(summ$importance)
@@ -102,44 +104,18 @@ plot_12_discrete <- function(pca, metadata_df, to_visualize) { # To do: incorpor
                     geom_point(aes(color = !!to_visualize), size = 3)+
                     xlab(pc1_label)+
                     ylab(pc2_label)+
-                    scale_color_manual(values = standard_colors[1:nr_of_colors])
+                    scale_color_manual(values = standard_colors[1:nr_of_colors])+
+                    theme_bw() +
+                    theme(
+                    plot.title = element_text(size = 28),
+                    text = element_text(size = 26, colour = "black"),
+                    axis.title = element_text(size = 28, colour = "black"),
+                    axis.text = element_text(size = 18, colour = "black"),
+                    legend.title = element_text(size = 28, colour = "black"),
+                    legend.text = element_text(size = 26, colour = "black"),
+            
+        )
     return(pc_plot)
 }
 
 
-#' Visualize PCA with Continuous Variable
-#'
-#' This function creates a scatter plot of the first two principal components (PC1 and PC2) from a PCA object, 
-#' with points colored by a continuous variable from the metadata.
-#'
-#' @param pca A PCA object obtained from a PCA analysis.
-#' @param to_visualize A string representing the name of the column in the metadata to visualize as a continuous variable.
-#' 
-#' @return A ggplot2 object representing the scatter plot of PC1 vs PC2 with points colored by the specified continuous variable.
-#'
-#' @details The function merges the PCA results with the metadata, extracts the importance of the principal components, 
-#' and constructs axis labels that include the percentage of variance explained by PC1 and PC2. 
-#' It then creates a scatter plot using ggplot2, with points colored according to the specified continuous variable.
-#'
-#' @examples
-#' # Assuming `pca_result` is a PCA object and `metadata_df` is a data frame with metadata:
-#' pca_plot <- pca_visualize_continuous(pca_result, "Age")
-#' print(pca_plot)
-#'
-#' @import ggplot2
-#' @import rlang
-pca_visualize_continuous <- function(pca, metadata_df, to_visualize){
-    # to_visualize must be the name of a column to visualize
-    merged <- merge_pca_met(pca, metadata_df)
-    summ <- summary(pca)
-    summ <- as.data.frame(summ$importance)
-    pc1_label <- paste("PC1", sprintf("%0.1f%%", summ[2, 1]*100), sep = " ")
-    pc2_label <- paste("PC2", sprintf("%0.1f%%", summ[2, 2]*100), sep = " ")
-    to_visualize <- rlang::sym(to_visualize)
-    pc_plot <- ggplot(merged, aes(x = PC1, y = PC2)) +
-        geom_point(aes(color = !!to_visualize), size = 3)+
-        xlab(pc1_label)+
-        ylab(pc2_label)+
-        scale_color_gradient(to_visualize)
-    return(pc_plot)
-}

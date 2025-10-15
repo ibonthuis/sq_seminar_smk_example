@@ -1,3 +1,4 @@
 snakemake_results*/
 data/
 .snakemake/
+results_old/
