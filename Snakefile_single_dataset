@@ -19,29 +19,29 @@ configfile: CONFIG_PATH
 
 ## Directories
 # ["..."] should be listed in the config
-DATA_DIR = config["data_dir"]
+DATA_DIR = config["data_dir_single_dataset"]
 BASE_OUTPUT_DIR = config["output_dir"]
+METADATA_SINGLE_DATASET = config["metadata_single_dataset"]
+EXPRESSION_SINGLE_DATASET = config["expression_single_dataset"]
 VARIABLE_TO_VISUALIZE = config["visualisation_var"]
+# METADATA_FILE_NAME = config["metadata_name"]
+# EXPRESSION_FILE_NAME = config["expression_name"]
+# DATASET_TYPE = config["dataset"]
 
+FILTERED_METADATA_SINGLE_DATASET_RDATA = os.path.join(BASE_OUTPUT_DIR, "filtered_metadata_single_dataset.RData")
+PCA_PLOT_SINGLE_DATASET_PDF = os.path.join(BASE_OUTPUT_DIR, "figures", "pca_plot_single_dataset.pdf")
 
-METADATA = os.path.join(DATA_DIR, "{dataset}", "metadata.csv")
-EXPRESSION = os.path.join(DATA_DIR, "{dataset}", "filtered_expression.tsv")
-
-## Wildcards
-DATASETS = config["dataset"]
-FILTERED_METADATA_RDATA = os.path.join(BASE_OUTPUT_DIR, "{dataset}", "filtered_metadata.tsv")
-PCA_PLOT_PDF = os.path.join(BASE_OUTPUT_DIR, "figures", "pca_plot_{dataset}.pdf")
 
 rule all:
     input:
-        expand(FILTERED_METADATA_RDATA, dataset = DATASETS), \
-        expand(PCA_PLOT_PDF, dataset = DATASETS)
+        FILTERED_METADATA_SINGLE_DATASET_RDATA, \
+        PCA_PLOT_SINGLE_DATASET_PDF
 
 rule format_metadata:
     """
     Inputs
     ------
-    METADATA:
+    RAW_METADATA:
         Path to raw metadata file containing sample info
 
     Outputs
@@ -50,9 +50,9 @@ rule format_metadata:
         File with the raw metadata filtered in RData format.
     """
     input:
-        metadata = METADATA
+        metadata = METADATA_SINGLE_DATASET
     output:
-        filtered_metadata = FILTERED_METADATA_RDATA
+        filtered_metadata_single_dataset = FILTERED_METADATA_SINGLE_DATASET_RDATA
     message:
         "; filtering metadata on {input} ;"
     params:
@@ -61,7 +61,7 @@ rule format_metadata:
         """
         Rscript {params.bin}/filter_metadata.R \
             -m {input.metadata} \
-            -o {output.filtered_metadata} 
+            -o {output.filtered_metadata_single_dataset} 
         """
 
 rule perform_dimensionality_reduction:
@@ -87,10 +87,10 @@ rule perform_dimensionality_reduction:
 
     """
     input:
-        metadata = FILTERED_METADATA_RDATA, \
-        expression = EXPRESSION
+        metadata = FILTERED_METADATA_SINGLE_DATASET_RDATA, \
+        expression = EXPRESSION_SINGLE_DATASET
     output:
-        pca_plot_pdf = PCA_PLOT_PDF
+        pca_plot_pdf = PCA_PLOT_SINGLE_DATASET_PDF
     message:
         "; Running dimensionality reduction of expressions on {input} ;"
     params:
