@@ -1,12 +1,14 @@
 ### Loading libraries
 required_libraries <- c(
-    "data.table",
-    "dplyr",
-    "optparse",
-    "rlang")
+                        "data.table",
+                        "dplyr",
+                        "optparse",
+                        "rlang")
 
 for (lib in required_libraries) {
-  suppressPackageStartupMessages(library(lib, character.only = TRUE, quietly = TRUE))
+  suppressPackageStartupMessages(
+                                 library(lib,
+                                         character.only = TRUE, quietly = TRUE))
 }
 
 ### Options
@@ -14,18 +16,18 @@ options(stringsAsFactors = FALSE)
 
 ### Command line options
 option_list <- list(
-    optparse::make_option(
-        c("-m", "--metadata"),
-        type = "character",
-        default = NULL,
-        help = "Path to the metadata file.",
-        metavar = "character"),
-    optparse::make_option(
-        c("-o", "--output_file"),
-        type = "character",
-        default = NULL,
-        help = "Path to the clean metadata file",
-        metavar = "character")
+  optparse::make_option(
+                        c("-m", "--metadata"),
+                        type = "character",
+                        default = NULL,
+                        help = "Path to the metadata file.",
+                        metavar = "character"),
+  optparse::make_option(
+                        c("-o", "--output_file"),
+                        type = "character",
+                        default = NULL,
+                        help = "Path to the clean metadata file",
+                        metavar = "character")
 )
 
 opt_parser <- optparse::OptionParser(option_list = option_list)
